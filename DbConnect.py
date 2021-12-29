@@ -12,7 +12,7 @@ class DBConnect :
         self.db.execute("create table if not exists Client (ClientID integer primary key autoincrement , ClientName text,ClientPhone text NOT NULL UNIQUE, ClientEmail text NOT NULL UNIQUE ,ClientAddress text,ClientJoin DATE)")
         self.db.execute("create table if not exists Product (ProductID integer primary key autoincrement , ProductName text, ProductPrice FLOAT text,ProductCreated_At DATE,ProductUpdated_At DATE)")
         self.db.execute("create table if not exists Invoice (InvoiceID integer primary key autoincrement ,ClientID integer,InvoiceCode text,InvoiceStatus BOOLEAN,InvoiceCreated_At DATE,InvoiceUpdated_At DATE)")
-        self.db.execute("create table if not exists InvoiceItem (InvoiceItemID integer primary key autoincrement ,ClientID integer,InvoiceID integer,InvoiceItemQuantity integer,InvoiceStatus BOOLEAN,InvoiceCreated_At DATE,InvoiceUpdated_At DATE )")
+        self.db.execute("create table if not exists InvoiceItem (InvoiceItemID integer primary key autoincrement ,ClientID integer,InvoiceID integer,InvoiceItemQuantity integer)")
         self.db.close()
     
     def add_client(self,client):
