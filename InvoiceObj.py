@@ -12,7 +12,7 @@ class Invoice:
         #create Invoice table in database
         self.db=sqlite3.connect("invoicesDB.db")
         self.db.row_factory=sqlite3.Row
-        self.db.execute("create table if not exists Invoice (InvoiceID integer primary key autoincrement ,ClientID integer,InvoiceCode text,InvoiceStatus BOOLEAN,InvoiceCreated_At DATE,InvoiceUpdated_At DATE)")
+        self.db.execute("create table if not exists Invoice (InvoiceID integer primary key autoincrement ,FOREIGN KEY(InvoiceClient_fk) REFERENCES Client(ClientID),InvoiceCode text,InvoiceStatus BOOLEAN,InvoiceCreated_At DATE,InvoiceUpdated_At DATE)")
         self.db.close()
 
 
@@ -42,7 +42,7 @@ class InvoiceItem:
         #create InvoiceItem table in databse
         self.db=sqlite3.connect("invoicesDB.db")
         self.db.row_factory=sqlite3.Row
-        self.db.execute("create table if not exists InvoiceItem (InvoiceItemID integer primary key autoincrement ,ClientID integer,InvoiceID integer,InvoiceItemQuantity integer)")
+        self.db.execute("create table if not exists InvoiceItem (InvoiceItemID integer primary key autoincrement ,FOREIGN KEY(InvoiceItemClient_fk) REFERENCES Client(ClientID),FOREIGN KEY(InvoiceItem_fk) REFERENCES Invoice(InvoiceID) ,InvoiceItemQuantity integer)")
         self.db.close()
 
 
