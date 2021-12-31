@@ -1,29 +1,33 @@
 import sqlite3
-
+from datetime import date
 class Invoice:
-    def __init__(self,code,client,status,create,update):
+    create=date.today()
+    update=0
+    status=False
+    def __init__(self,code,client_id):
         #invoice attr
         self.code = code
-        self.client = client
-        self.status = status
-        self.create = create
-        self.update = update
+        self.client_id = client_id
+        self.status = Invoice.status
+        self.create = Invoice.create
+        self.update = Invoice.update
 
         #create Invoice table in database
         self.db=sqlite3.connect("invoicesDB.db")
         self.db.row_factory=sqlite3.Row
-        self.db.execute("create table if not exists Invoice (InvoiceID integer primary key autoincrement ,FOREIGN KEY(InvoiceClient_fk) REFERENCES Client(ClientID),InvoiceCode text,InvoiceStatus BOOLEAN,InvoiceCreated_At DATE,InvoiceUpdated_At DATE)")
+        self.db.execute("create table if not exists Invoice (InvoiceID integer primary key autoincrement ,InvoiceClient_fk integer,InvoiceCode text,InvoiceStatus BOOLEAN,InvoiceCreated_At DATE,InvoiceUpdated_At DATE,FOREIGN KEY(InvoiceClient_fk) REFERENCES Client(ClientID))")
         self.db.close()
 
 
 class Client:
-    def __init__(self,name,phone,email,address,joinDate):
+    joinDate=date.today()
+    def __init__(self,name,phone,email,address):
         #client attr
         self.name = name
         self.phone = phone
         self.email = email
         self.address = address
-        self.joinDate = joinDate
+        self.joinDate = Client.joinDate
 
         #create client table in database
         self.db=sqlite3.connect("invoicesDB.db")
@@ -33,26 +37,28 @@ class Client:
 
 
 class InvoiceItem:
-    def __init__(self,client,invoice,quantity):
+    def __init__(self,product_id,invoice_id,quantity):
         #InvoiceItem attr
-        self.client = client
-        self.invoice = invoice
+        self.product_id = product_id
+        self.invoice_id = invoice_id
         self.quantity = quantity
 
         #create InvoiceItem table in databse
         self.db=sqlite3.connect("invoicesDB.db")
         self.db.row_factory=sqlite3.Row
-        self.db.execute("create table if not exists InvoiceItem (InvoiceItemID integer primary key autoincrement ,FOREIGN KEY(InvoiceItemClient_fk) REFERENCES Client(ClientID),FOREIGN KEY(InvoiceItem_fk) REFERENCES Invoice(InvoiceID) ,InvoiceItemQuantity integer)")
+        self.db.execute("create table if not exists InvoiceItem (InvoiceItemID integer primary key autoincrement ,InvoiceItemProduct_fk integer,InvoiceItem_fk integer ,InvoiceItemQuantity integer,FOREIGN KEY(InvoiceItemProduct_fk) REFERENCES Product(ProductID),FOREIGN KEY(InvoiceItem_fk) REFERENCES Invoice(InvoiceID))")
         self.db.close()
 
 
 class Product:
-    def __init__(self,name,price,create,update):
+    create=date.today()
+    update=0
+    def __init__(self,name,price):
         #product attr 
         self.name = name
         self.price = price
-        self.create = create
-        self.update = update
+        self.create = Product.create
+        self.update = Product.update
 
         #create product table in databse
         self.db=sqlite3.connect("invoicesDB.db")
