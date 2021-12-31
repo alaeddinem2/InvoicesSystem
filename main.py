@@ -9,6 +9,7 @@ dbconnect=DBConnect()
 
 
 
+
 # dbconnect.add_client(client1)
 # dbconnect.add_client(client2)
 # dbconnect.add_client(client3)
@@ -29,28 +30,29 @@ dbconnect=DBConnect()
 # dbconnect.add_product(product5)
 # dbconnect.add_product(product6)
 
-# #Invoices
-# invoice1 = Invoice("001",1)
-# invoice2 = Invoice("002",2)
+
+# # #Invoices
+# invoice1 = Invoice("001",client1.id)
+# invoice2 = Invoice("002",client2.id)
 
 # dbconnect.add_Invoice(invoice1)
 # dbconnect.add_Invoice(invoice2)
 
 
-# invoice01_item01 = InvoiceItem(1,1,3)
-# invoice01_item02 = InvoiceItem(2,1,2)
-# invoice01_item03 = InvoiceItem(3,1,4)
-# invoice01_item04 = InvoiceItem(4,1,1)
+# invoice01_item01 = InvoiceItem(product1.id,invoice1.id,5)
+# invoice01_item02 = InvoiceItem(product2.id,invoice1.id,3)
+# invoice01_item03 = InvoiceItem(product3.id,invoice1.id,4)
+# invoice01_item04 = InvoiceItem(product4.id,invoice1.id,2)
 
 # dbconnect.add_item(invoice01_item01)
 # dbconnect.add_item(invoice01_item02)
 # dbconnect.add_item(invoice01_item03)
 # dbconnect.add_item(invoice01_item04)
 
-# invoice02_item01 = InvoiceItem(1,2,6)
-# invoice02_item02 = InvoiceItem(2,2,4)
-# invoice02_item03 = InvoiceItem(5,2,3)
-# invoice02_item04 = InvoiceItem(6,2,7)
+# invoice02_item01 = InvoiceItem(product1.id,invoice2.id,3)
+# invoice02_item02 = InvoiceItem(product5.id,invoice2.id,7)
+# invoice02_item03 = InvoiceItem(product6.id,invoice2.id,1)
+# invoice02_item04 = InvoiceItem(product2.id,invoice2.id,2)
 
 # dbconnect.add_item(invoice02_item01)
 # dbconnect.add_item(invoice02_item02)
@@ -58,8 +60,7 @@ dbconnect=DBConnect()
 # dbconnect.add_item(invoice02_item04)
 
 #dbconnect.get_invoice_items(1)
-dbconnect.remove_item(2)
-dbconnect.remove_client(3)
+
 
 
 

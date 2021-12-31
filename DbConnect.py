@@ -12,10 +12,15 @@ class DBConnect :
             self.db.row_factory=sqlite3.Row
             cursor=self.db.cursor()
             self.db.execute("insert into  Client (ClientName, ClientPhone, ClientEmail, ClientAddress, ClientJoin) values(?,?,?,?,?)",
-                        (client.name,client.phone,client.email,client.address,client.joinDate))
+                        (client.name,client.phone,client.email,client.address,client.joinDate))            
             self.db.commit()
+            cursor.execute('SELECT max(ClientID) FROM Client')
+            client.id = cursor.fetchone()[0]
+            
             cursor.close()
             self.db.close()
+            
+            
         except self.db.Error as error:
             print(error)
           
@@ -86,6 +91,8 @@ class DBConnect :
             self.db.execute("insert into  Product (ProductName, ProductPrice, ProductCreated_At,ProductUpdated_At) values(?,?,?,?)",
                         (product.name,product.price,product.create,product.update))
             self.db.commit()
+            cursor.execute('SELECT max(ClientID) FROM Client')
+            product.id = cursor.fetchone()[0]
             cursor.close()
             self.db.close()
         except self.db.Error as error:
@@ -156,6 +163,8 @@ class DBConnect :
             self.db.execute("insert into  Invoice (InvoiceClient_fk, InvoiceCode, InvoiceStatus,InvoiceCreated_At,InvoiceUpdated_At) values(?,?,?,?,?)",
                         (invoice.client_id,invoice.code,invoice.status,invoice.create,None))
             self.db.commit()
+            cursor.execute('SELECT max(ClientID) FROM Client')
+            invoice.id = cursor.fetchone()[0]
             cursor.close()
             self.db.close()
         except self.db.Error as error:
@@ -228,6 +237,8 @@ class DBConnect :
             self.db.execute("insert into  InvoiceItem (InvoiceItemProduct_fk, InvoiceItem_fk, InvoiceItemQuantity) values(?,?,?)",
                         (invoiceItem.product_id,invoiceItem.invoice_id,invoiceItem.quantity))
             self.db.commit()
+            cursor.execute('SELECT max(ClientID) FROM Client')
+            invoiceItem.id = cursor.fetchone()[0]
             cursor.close()
             self.db.close()
         except self.db.Error as error:
@@ -280,10 +291,27 @@ class DBConnect :
             items=cursor.fetchall()
             for item in items:
                 print(item)
-                
-                print("\n")
+            
+            cursor.execute(""" SELECT ProductName from Product where ProductID=? """,(items[0],))
+            product_name=cursor.fetchone()[0]   
+            invoice_item=(product_name,items[1])    
             cursor.close()
-            self.db.close() 
+            self.db.close()
+            return invoice_item
+            
+        except self.db.Error as error:
+            print('faild to get Item',error)
+
+    def get_item_name(self,id):
+        try:
+            self.db=sqlite3.connect("invoicesDB.db")
+            cursor=self.db.cursor()
+            cursor.execute(""" SELECT ProductName from Product where ProductID=? """,(id,))
+            product_name=cursor.fetchone()[0]
+            #print(product_name)    
+            cursor.close()
+            self.db.close()
+            return product_name
             
         except self.db.Error as error:
             print('faild to get Item',error)
