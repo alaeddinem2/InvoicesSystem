@@ -17,7 +17,7 @@ class Invoice:
         #create Invoice table in database
         self.db=sqlite3.connect("invoicesDB.db")
         self.db.row_factory=sqlite3.Row
-        self.db.execute("create table if not exists Invoice (InvoiceID integer primary key autoincrement ,InvoiceClient_fk integer,InvoiceCode text,InvoiceStatus BOOLEAN,InvoiceCreated_At DATE,InvoiceUpdated_At DATE,FOREIGN KEY(InvoiceClient_fk) REFERENCES Client(ClientID) ON DELETE CASCADE ON UPDATE CASCADE)")
+        self.db.execute("create table if not exists Invoice (InvoiceID integer primary key autoincrement ,InvoiceClient_fk integer,InvoiceCode text,InvoiceStatus BOOLEAN,InvoiceCreated_At DATE,InvoiceUpdated_At DATE,FOREIGN KEY(InvoiceClient_fk) REFERENCES Client(ClientID) ON DELETE CASCADE ON UPDATE CASCADE )")
         self.db.close()
 
 
@@ -52,7 +52,7 @@ class InvoiceItem:
         #create InvoiceItem table in databse
         self.db=sqlite3.connect("invoicesDB.db")
         self.db.row_factory=sqlite3.Row
-        self.db.execute("create table if not exists InvoiceItem (InvoiceItemID integer primary key autoincrement ,InvoiceItemProduct_fk integer,InvoiceItem_fk integer ,InvoiceItemQuantity integer,FOREIGN KEY(InvoiceItemProduct_fk) REFERENCES Product(ProductID) ON DELETE CASCADE ON UPDATE CASCADE,FOREIGN KEY(InvoiceItem_fk) REFERENCES Invoice(InvoiceID) ON DELETE CASCADE ON UPDATE CASCADE)")
+        self.db.execute("create table if not exists InvoiceItem (InvoiceItemID integer primary key autoincrement ,InvoiceItemProduct_fk integer,InvoiceItem_fk integer ,InvoiceItemQuantity integer,FOREIGN KEY(InvoiceItemProduct_fk) REFERENCES Product(ProductID) ON DELETE CASCADE  ,FOREIGN KEY(InvoiceItem_fk) REFERENCES Invoice(InvoiceID) ON DELETE CASCADE  )")
         self.db.close()
 
 

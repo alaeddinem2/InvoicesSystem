@@ -53,6 +53,7 @@ class DBConnect :
     def remove_client(self,id):
         try:
             self.db=sqlite3.connect("invoicesDB.db")
+            self.db.execute("PRAGMA foreign_keys = ON")
             cursor=self.db.cursor()
             self.db.execute("""DELETE FROM Client WHERE ClientID = ?""",(id,))
             self.db.commit()
@@ -91,7 +92,7 @@ class DBConnect :
             self.db.execute("insert into  Product (ProductName, ProductPrice, ProductCreated_At,ProductUpdated_At) values(?,?,?,?)",
                         (product.name,product.price,product.create,product.update))
             self.db.commit()
-            cursor.execute('SELECT max(ClientID) FROM Client')
+            cursor.execute('SELECT max(ProductID) FROM Product')
             product.id = cursor.fetchone()[0]
             cursor.close()
             self.db.close()
@@ -127,11 +128,13 @@ class DBConnect :
     def remove_product(self,id):
         try:
             self.db=sqlite3.connect("invoicesDB.db")
+            self.db.execute("PRAGMA foreign_keys = ON")
             cursor=self.db.cursor()
-            self.db.execute("""DELETE FROM Product WHERE ProductID = ?""",(id,))
+            cursor.execute("""DELETE FROM Product WHERE ProductID = ?""",(id,))
             self.db.commit()
             cursor.close()
-            self.db.close() 
+            self.db.close()
+            print("product was deleted !")
         except self.db.Error as error:
             print('faild to remove elemn',error)
 
@@ -163,7 +166,7 @@ class DBConnect :
             self.db.execute("insert into  Invoice (InvoiceClient_fk, InvoiceCode, InvoiceStatus,InvoiceCreated_At,InvoiceUpdated_At) values(?,?,?,?,?)",
                         (invoice.client_id,invoice.code,invoice.status,invoice.create,None))
             self.db.commit()
-            cursor.execute('SELECT max(ClientID) FROM Client')
+            cursor.execute('SELECT max(InvoiceID) FROM Invoice')
             invoice.id = cursor.fetchone()[0]
             cursor.close()
             self.db.close()
@@ -175,11 +178,10 @@ class DBConnect :
             self.db=sqlite3.connect("invoicesDB.db")
             cursor=self.db.cursor()
             cursor.execute(""" SELECT * from Invoice where InvoiceID = ? """,(id,))
-            invoices=cursor.fetchone()
-            for invoice in invoices:
-                print(invoice)
+            invoice=cursor.fetchall()
             cursor.close()
             self.db.close() 
+            return invoice
             
         except self.db.Error as error:
             print('faild to get clients',error)
@@ -199,8 +201,9 @@ class DBConnect :
     def remove_invoice(self,id):
         try:
             self.db=sqlite3.connect("invoicesDB.db")
+            self.db.execute("PRAGMA foreign_keys = ON")
             cursor=self.db.cursor()
-            self.db.execute("""DELETE FROM Invoice WHERE InvoiceID = ?""",(id,))
+            cursor.execute("""DELETE FROM Invoice WHERE InvoiceID = ?""",(id,))
             self.db.commit()
             cursor.close()
             self.db.close() 
@@ -237,7 +240,7 @@ class DBConnect :
             self.db.execute("insert into  InvoiceItem (InvoiceItemProduct_fk, InvoiceItem_fk, InvoiceItemQuantity) values(?,?,?)",
                         (invoiceItem.product_id,invoiceItem.invoice_id,invoiceItem.quantity))
             self.db.commit()
-            cursor.execute('SELECT max(ClientID) FROM Client')
+            cursor.execute('SELECT max(InvoiceItemID) FROM InvoiceItem')
             invoiceItem.id = cursor.fetchone()[0]
             cursor.close()
             self.db.close()
@@ -284,20 +287,21 @@ class DBConnect :
             print('faild to remove elemnt',error)
 
     def get_invoice_items(self,invoice_id):
+        items_inv=[]
         try:
             self.db=sqlite3.connect("invoicesDB.db")
             cursor=self.db.cursor()
             cursor.execute(""" SELECT InvoiceItemProduct_fk,InvoiceItemQuantity from InvoiceItem where InvoiceItem_fk=? """,(invoice_id,))
             items=cursor.fetchall()
             for item in items:
-                print(item)
+                cursor.execute(""" SELECT ProductName from Product where ProductID=? """,(item[0],))
+                product_name=cursor.fetchone()[0]
+                items_inv.append((product_name,item[1]))
             
-            cursor.execute(""" SELECT ProductName from Product where ProductID=? """,(items[0],))
-            product_name=cursor.fetchone()[0]   
-            invoice_item=(product_name,items[1])    
+                
             cursor.close()
             self.db.close()
-            return invoice_item
+            return items_inv
             
         except self.db.Error as error:
             print('faild to get Item',error)
