@@ -1,17 +1,37 @@
-from DbConnect import DBConnect
-from InvoiceObj import Client,Product,Invoice,InvoiceItem
-from datetime import date
+import sqlite3
+from sqlite3.dbapi2 import Error
+id=input(" input id  : ") 
+try:
+    with sqlite3.connect("invoicesDB.db") as connection:
+        cursor=connection.cursor()
+    
+    # Query for INNER JOIN
+        sql = '''SELECT Invoice.InvoiceCode,Client.ClientName, Product.ProductName , Product.ProductPrice, InvoiceItem.InvoiceItemQuantity
+    FROM   InvoiceItem
+    INNER JOIN Invoice ON InvoiceID = InvoiceItem_fk 
+    INNER JOIN Product on Product.ProductID = InvoiceItem.InvoiceItemProduct_fk 
+    INNER JOIN Client on Client.ClientID = Invoice.InvoiceClient_fk 
+    WHERE InvoiceID = ?   ;''' 
+    
+    # Executing the query
+        cursor.execute(sql,id)
+    
+    # Fetching rows from the result table
+        result = cursor.fetchall()
+        print(result)
+except TypeError :
+    print('connection err',TypeError )
+    
+  
+# Closing the connection
 
-dbconnect=DBConnect()
-
-client4 = Client("Adm","077556648","dem@gmail.com","sokra")
-dbconnect.add_client(client4)
-
-print(client4.clientID)
 
 
-cursor.execute(""" SELECT ProductName from Product where ProductID=? """,(items[0],))
-            product_name=cursor.fetchone()[0]   
-            invoice_item=(product_name,items[1])
+
+
+
+
+
+
 
 

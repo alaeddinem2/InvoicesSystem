@@ -1,13 +1,13 @@
 import sqlite3
 from datetime import date
 class Invoice:
-    __id=0
-    create=date.today()
-    update=0
-    status=False
+    id = None
+    create = date.today()
+    update = None
+    status = False
     def __init__(self,code,client_id):
         #invoice attr
-        self.id=Invoice.__id
+        self.id=Invoice.id
         self.code = code
         self.client_id = client_id
         self.status = Invoice.status
@@ -22,11 +22,11 @@ class Invoice:
 
 
 class Client:
-    joinDate=date.today()
-    __id = 0
+    joinDate = date.today()
+    id = None
     def __init__(self,name,phone,email,address):
         #client attr
-        self.id=Client.__id
+        self.id=Client.id
         self.name = name
         self.phone = phone
         self.email = email
@@ -41,10 +41,10 @@ class Client:
 
 
 class InvoiceItem:
-    __id=0
+    id = None
     def __init__(self,product_id,invoice_id,quantity):
         #InvoiceItem attr
-        self.id=InvoiceItem.__id
+        self.id=InvoiceItem.id
         self.product_id = product_id
         self.invoice_id = invoice_id
         self.quantity = quantity
@@ -57,12 +57,12 @@ class InvoiceItem:
 
 
 class Product:
-    __id=0
-    create=date.today()
-    update=0
+    id = None
+    create = date.today()
+    update = None
     def __init__(self,name,price):
         #product attr 
-        self.id=Product.__id
+        self.id = Product.id
         self.name = name
         self.price = price
         self.create = Product.create

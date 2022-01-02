@@ -1,72 +1,55 @@
 
+from datetime import date
 import sqlite3
 from sqlite3.dbapi2 import Date
+from InvoiceObj import Client,Product,Invoice,InvoiceItem
 
 class DBConnect :
 
     
     #Client operations
     def add_client(self,client):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            self.db.row_factory=sqlite3.Row
-            cursor=self.db.cursor()
-            self.db.execute("insert into  Client (ClientName, ClientPhone, ClientEmail, ClientAddress, ClientJoin) values(?,?,?,?,?)",
+    
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
+            cursor.execute("insert into  Client (ClientName, ClientPhone, ClientEmail, ClientAddress, ClientJoin) values(?,?,?,?,?)",
                         (client.name,client.phone,client.email,client.address,client.joinDate))            
-            self.db.commit()
+            connection.commit()
             cursor.execute('SELECT max(ClientID) FROM Client')
             client.id = cursor.fetchone()[0]
+            print(client.name," was added !")
             
-            cursor.close()
-            self.db.close()
-            
-            
-        except self.db.Error as error:
-            print(error)
-          
+                    
     def get_client(self,id):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
             cursor.execute(""" SELECT * from Client where ClientID = ? """,(id,))
-            clients=cursor.fetchone()
-            for client in clients:
-                print(client)
-            cursor.close()
-            self.db.close() 
+            client=cursor.fetchone()
+            return client
+ 
             
-        except self.db.Error as error:
-            print('faild to get clients',error)
 
     def update_client(self,client,id):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
-            self.db.execute("""Update Client set ClientName = ?,ClientPhone=?, ClientEmail = ?,ClientAddress=? WHERE ClientID = ?""",
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor() 
+            cursor.execute("""Update Client set ClientName = ?,ClientPhone=?, ClientEmail = ?,ClientAddress=? WHERE ClientID = ?""",
                             (client.name,client.phone,client.email,client.address,id))
-            self.db.commit()
-            cursor.close()
-            self.db.close() 
-        except self.db.Error as error:
-            print('faild to update ',client.name,'information',error) 
+            connection.commit()
+             
+         
 
     def remove_client(self,id):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            self.db.execute("PRAGMA foreign_keys = ON")
-            cursor=self.db.cursor()
-            self.db.execute("""DELETE FROM Client WHERE ClientID = ?""",(id,))
-            self.db.commit()
-            cursor.close()
-            self.db.close() 
-            print('client was delete')
-        except self.db.Error as error:
-            print('faild to remove elemn',error) 
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()          
+            cursor.execute("PRAGMA foreign_keys = ON")
+            cursor.execute("""DELETE FROM Client WHERE ClientID = ?""",(id,))
+            connection.commit() 
+            print('client was deleted')
+         
     
     def get_all_clients(self):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
             cursor.execute(""" SELECT * from Client """)
             clients=cursor.fetchall()
             for row in clients:
@@ -77,71 +60,50 @@ class DBConnect :
                 print("address: ", row[4])
                 print("joinDate: ", row[5])
                 print("\n")
-            cursor.close()
-            self.db.close() 
-            
-        except self.db.Error as error:
-            print('faild to get clients',error)
-
+    
+    
     #product operations
+
     def add_product(self,product):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            self.db.row_factory=sqlite3.Row
-            cursor=self.db.cursor()
-            self.db.execute("insert into  Product (ProductName, ProductPrice, ProductCreated_At,ProductUpdated_At) values(?,?,?,?)",
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
+            cursor.execute("insert into  Product (ProductName, ProductPrice, ProductCreated_At,ProductUpdated_At) values(?,?,?,?)",
                         (product.name,product.price,product.create,product.update))
-            self.db.commit()
+            connection.commit()
             cursor.execute('SELECT max(ProductID) FROM Product')
             product.id = cursor.fetchone()[0]
-            cursor.close()
-            self.db.close()
-        except self.db.Error as error:
-            print(error)
+        
 
     def get_product(self,id):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
             cursor.execute(""" SELECT * from Product where ProductID = ? """,(id,))
             clients=cursor.fetchone()
             for client in clients:
                 print(client)
-            cursor.close()
-            self.db.close() 
-            
-        except self.db.Error as error:
-            print('faild to get clients',error)
-
+           
+    # TODO: modify this function below
     def update_product(self,product,id):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
-            self.db.execute("""Update Client set ProductName = ?,ProductPrice=?, ProductCreated_At = ?,ProductUpdated_At=? WHERE ProductID = ?""",
-                            (product.name,product.price,product.create,product.update,id))
-            self.db.commit()
-            cursor.close()
-            self.db.close() 
-        except self.db.Error as error:
-            print('faild to update ',client.name,'information',error)
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
+            cursor.execute("""Update Client set ProductName = ?,ProductPrice=?,ProductUpdated_At=? WHERE ProductID = ?""",
+                            (product.name,product.price,date.today(),id))
+            connection.commit()
+             
+        
 
     def remove_product(self,id):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
             self.db.execute("PRAGMA foreign_keys = ON")
-            cursor=self.db.cursor()
             cursor.execute("""DELETE FROM Product WHERE ProductID = ?""",(id,))
-            self.db.commit()
-            cursor.close()
-            self.db.close()
+            connection.commit()
             print("product was deleted !")
-        except self.db.Error as error:
-            print('faild to remove elemn',error)
+        
 
     def get_all_products(self):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
             cursor.execute(""" SELECT * from Product """)
             clients=cursor.fetchall()
             for row in clients:
@@ -151,70 +113,51 @@ class DBConnect :
                 print("create: ", row[3])
                 print("update: ", row[4])
                 print("\n")
-            cursor.close()
-            self.db.close() 
-            
-        except self.db.Error as error:
-            print('faild to get clients',error)
+             
 
     #Invoice operations
+
     def add_Invoice(self,invoice):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            self.db.row_factory=sqlite3.Row
-            cursor=self.db.cursor()
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
             self.db.execute("insert into  Invoice (InvoiceClient_fk, InvoiceCode, InvoiceStatus,InvoiceCreated_At,InvoiceUpdated_At) values(?,?,?,?,?)",
                         (invoice.client_id,invoice.code,invoice.status,invoice.create,None))
-            self.db.commit()
+            connection.commit()
             cursor.execute('SELECT max(InvoiceID) FROM Invoice')
             invoice.id = cursor.fetchone()[0]
-            cursor.close()
-            self.db.close()
-        except self.db.Error as error:
-            print(error)
+            
 
     def get_invoice(self,id):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
             cursor.execute(""" SELECT * from Invoice where InvoiceID = ? """,(id,))
             invoice=cursor.fetchall()
             cursor.close()
             self.db.close() 
             return invoice
             
-        except self.db.Error as error:
-            print('faild to get clients',error)
-
     def update_invoice(self,invoiceStatus,id):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
-            self.db.execute("""Update Invoice set InvoiceStatus = ?,InvoiceUpdated_At WHERE InvoiceID = ?""",
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
+            connection.execute("""Update Invoice set InvoiceStatus = ?,InvoiceUpdated_At WHERE InvoiceID = ?""",
                             (invoiceStatus,Date.today(),id))
-            self.db.commit()
-            cursor.close()
-            self.db.close() 
-        except self.db.Error as error:
-            print('faild to update information',error) 
+            connection.commit()
+             
+         
 
     def remove_invoice(self,id):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            self.db.execute("PRAGMA foreign_keys = ON")
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
+            cursor.execute("PRAGMA foreign_keys = ON")
             cursor=self.db.cursor()
             cursor.execute("""DELETE FROM Invoice WHERE InvoiceID = ?""",(id,))
-            self.db.commit()
-            cursor.close()
-            self.db.close() 
-        except self.db.Error as error:
-            print('faild to remove elemn',error)
+            connection.commit()
+            
 
     def get_all_invoices(self,client_id):
 
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
             cursor.execute(""" SELECT * from Invoice where InvoiceClient_fk=? """,(client_id))
             clients=cursor.fetchall()
             for row in clients:
@@ -225,98 +168,100 @@ class DBConnect :
                 print("InvoiceCreated_At: ",row[5])
                 print("InvoiceUpdated_At: ",row[6])
                 print("\n")
-            cursor.close()
-            self.db.close() 
-            
-        except self.db.Error as error:
-            print('faild to get clients',error)
+                
     
     #Items operations 
+
     def add_item(self,invoiceItem):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            self.db.row_factory=sqlite3.Row
-            cursor=self.db.cursor()
-            self.db.execute("insert into  InvoiceItem (InvoiceItemProduct_fk, InvoiceItem_fk, InvoiceItemQuantity) values(?,?,?)",
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
+            cursor.execute("insert into  InvoiceItem (InvoiceItemProduct_fk, InvoiceItem_fk, InvoiceItemQuantity) values(?,?,?)",
                         (invoiceItem.product_id,invoiceItem.invoice_id,invoiceItem.quantity))
-            self.db.commit()
+            connection.commit()
             cursor.execute('SELECT max(InvoiceItemID) FROM InvoiceItem')
             invoiceItem.id = cursor.fetchone()[0]
-            cursor.close()
-            self.db.close()
-        except self.db.Error as error:
-            print(error)
+            
 
     def get_item(self,invoice_id):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
             cursor.execute(""" SELECT InvoiceItemProduct_fk,InvoiceItemQuantity from InvoiceItem where InvoiceItem_fk=? """,(invoice_id,))
             items=cursor.fetchone()
             for item in items:
                 print("product :",  item[1])
                 print("quantity :", item[3])
-            cursor.close()
-            self.db.close() 
             
-        except self.db.Error as error:
-            print('faild to get invoice item',error)
 
     def update_item(self,itemQuantity,product_id,invoice_id):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
-            self.db.execute("""Update InvoiceItem set InvoiceItemQuantity=? WHERE InvoiceItemID = ?,InvoiceProductID""",
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
+            cursor.execute("""Update InvoiceItem set InvoiceItemQuantity=? WHERE InvoiceItemID = ?,InvoiceProductID""",
                             (itemQuantity.quantity,invoice_id,product_id))
-            self.db.commit()
-            cursor.close()
-            self.db.close() 
-        except self.db.Error as error:
-            print('faild to update information',error)
+            connection.commit()
+             
+        
 
     def remove_item(self,item_id):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
-            self.db.execute("""DELETE FROM InvoiceItem WHERE  InvoiceItemID = ?""",(item_id,))
-            self.db.commit()
-            cursor.close()
-            self.db.close() 
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
+            cursor.execute("""DELETE FROM InvoiceItem WHERE  InvoiceItemID = ?""",(item_id,))
+            connection.commit() 
             print("item deleted")
-        except self.db.Error as error:
-            print('faild to remove elemnt',error)
+        
 
-    def get_invoice_items(self,invoice_id):
-        items_inv=[]
+    def get_invoice_items(self,id):
         try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
-            cursor.execute(""" SELECT InvoiceItemProduct_fk,InvoiceItemQuantity from InvoiceItem where InvoiceItem_fk=? """,(invoice_id,))
-            items=cursor.fetchall()
-            for item in items:
-                cursor.execute(""" SELECT ProductName from Product where ProductID=? """,(item[0],))
-                product_name=cursor.fetchone()[0]
-                items_inv.append((product_name,item[1]))
+            with sqlite3.connect("invoicesDB.db") as connection:
+                 cursor=connection.cursor()
             
-                
-            cursor.close()
-            self.db.close()
-            return items_inv
+            # Query for INNER JOIN
+                 sql = """SELECT Product.ProductName,Product.ProductPrice, InvoiceItem.InvoiceItemQuantity
+            FROM   Invoice ,InvoiceItem
+            LEFT JOIN Product on Product.ProductID = InvoiceItem.InvoiceItemProduct_fk
+            WHERE InvoiceID = ? """ 
+                 cursor.execute(sql,(id,))
+                 invoice= cursor.fetchall()
+                 return invoice
+        
+        except TypeError :
+            print('connection err',TypeError )
+    
+    def get_invoice_info(self,id):
+        try:
+            with sqlite3.connect("invoicesDB.db") as connection:
+                 cursor=connection.cursor()
             
-        except self.db.Error as error:
-            print('faild to get Item',error)
+            # Query for INNER JOIN
+                 sql = """SELECT Invoice.InvoiceCode,Invoice.InvoiceStatus, Client.ClientName,Client.ClientEmail,Client.ClientPhone,ClientAddress
+                        FROM  invoice
+                        LEFT JOIN Client on Client.ClientID = Invoice.InvoiceClient_fk
+                        WHERE Invoice.InvoiceID = ? """ 
+                 cursor.execute(sql,(id,))
+                 invoice= cursor.fetchall()
+                 return invoice
+        
+        except TypeError :
+            print('connection err',TypeError )
+            
+        
 
     def get_item_name(self,id):
-        try:
-            self.db=sqlite3.connect("invoicesDB.db")
-            cursor=self.db.cursor()
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
             cursor.execute(""" SELECT ProductName from Product where ProductID=? """,(id,))
             product_name=cursor.fetchone()[0]
             #print(product_name)    
             cursor.close()
             self.db.close()
             return product_name
+    def total(self,invoice_items):
+        total=0.0
+        print(type(invoice_items[2]))
+        for item in invoice_items:
+            price=float(item[1])*(item[2])
+            print(item[0],'the price of unit : ',item[1],'the number of items : ',item[2]," the price", price)
+            total+=price
+        print(total)
+
             
-        except self.db.Error as error:
-            print('faild to get Item',error)
     
