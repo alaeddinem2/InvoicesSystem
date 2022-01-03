@@ -60,13 +60,15 @@ dbconnect.add_item(invoice01_item04)'''
 #print(invoice02_item03.id)
 #dbconnect.remove_invoice(1)
 #dbconnect.remove_product(5)
-invoice_info=dbconnect.get_invoice_info(1)
-print(invoice_info)
-print('--------------------')
-invoice_items=dbconnect.get_invoice_items(1)
+# invoice_info=dbconnect.get_invoice_info(1)
+# print(invoice_info)
+# print('--------------------')
+# invoice_items=dbconnect.get_invoice_items(1)
 
-print('--------------------')
-dbconnect.total(invoice_items)
+# print('--------------------')
+# dbconnect.total(invoice_items)
+client_invoices=dbconnect.get_client_invoices(1)
+print(client_invoices)
 
 
 

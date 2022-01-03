@@ -2,7 +2,7 @@
 from datetime import date
 import sqlite3
 from sqlite3.dbapi2 import Date
-from InvoiceObj import Client,Product,Invoice,InvoiceItem
+
 
 class DBConnect :
 
@@ -154,20 +154,13 @@ class DBConnect :
             connection.commit()
             
 
-    def get_all_invoices(self,client_id):
+    def get_client_invoices(self,client_id):
 
         with sqlite3.connect("invoicesDB.db") as connection:
             cursor=connection.cursor()
-            cursor.execute(""" SELECT * from Invoice where InvoiceClient_fk=? """,(client_id))
-            clients=cursor.fetchall()
-            for row in clients:
-                print("InvoiceID: ",        row[0])
-                print("InvoiceCient: ",     row[2])
-                print("InvoiceCode: ",      row[3])
-                print("InvoiceStatus: ",    row[4])
-                print("InvoiceCreated_At: ",row[5])
-                print("InvoiceUpdated_At: ",row[6])
-                print("\n")
+            cursor.execute(""" SELECT * from Invoice where InvoiceClient_fk=? """,(client_id,))
+            invoices=cursor.fetchall()
+            return invoices
                 
     
     #Items operations 
@@ -256,7 +249,7 @@ class DBConnect :
             return product_name
     def total(self,invoice_items):
         total=0.0
-        print(type(invoice_items[2]))
+        
         for item in invoice_items:
             price=float(item[1])*(item[2])
             print(item[0],'the price of unit : ',item[1],'the number of items : ',item[2]," the price", price)
