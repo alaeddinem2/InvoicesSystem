@@ -86,7 +86,8 @@ class DBConnect :
     def update_product(self,product,id):
         with sqlite3.connect("invoicesDB.db") as connection:
             cursor=connection.cursor()
-            cursor.execute("""Update Client set ProductName = ?,ProductPrice=?,ProductUpdated_At=? WHERE ProductID = ?""",
+            cursor.execute("PRAGMA foreign_keys = ON")
+            cursor.execute("""Update Product set ProductName = ?, ProductPrice=?,ProductUpdated_At=? WHERE ProductID = ?""",
                             (product.name,product.price,date.today(),id))
             connection.commit()
              
@@ -187,8 +188,9 @@ class DBConnect :
     def update_item(self,itemQuantity,product_id,invoice_id):
         with sqlite3.connect("invoicesDB.db") as connection:
             cursor=connection.cursor()
-            cursor.execute("""Update InvoiceItem set InvoiceItemQuantity=? WHERE InvoiceItemID = ?,InvoiceProductID""",
-                            (itemQuantity.quantity,invoice_id,product_id))
+            cursor.execute("PRAGMA foreign_keys = ON")
+            cursor.execute("""Update InvoiceItem set InvoiceItemQuantity=? WHERE InvoiceItem_fk = ? and InvoiceItemProduct_fk =?""",
+                            (itemQuantity,invoice_id,product_id))
             connection.commit()
              
         

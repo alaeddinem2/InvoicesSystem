@@ -57,7 +57,7 @@ class InvoiceItem:
         with sqlite3.connect("invoicesDB.db") as connection:
             cursor=connection.cursor()
             connection.row_factory=sqlite3.Row
-            cursor.execute("create table if not exists InvoiceItem (InvoiceItemID integer primary key autoincrement ,InvoiceItemProduct_fk integer,InvoiceItem_fk integer ,InvoiceItemQuantity integer,FOREIGN KEY(InvoiceItemProduct_fk) REFERENCES Product(ProductID) ON DELETE CASCADE  ,FOREIGN KEY(InvoiceItem_fk) REFERENCES Invoice(InvoiceID) ON DELETE CASCADE  )")
+            cursor.execute("create table if not exists InvoiceItem (InvoiceItemID integer primary key autoincrement ,InvoiceItemProduct_fk integer,InvoiceItem_fk integer ,InvoiceItemQuantity integer,FOREIGN KEY(InvoiceItemProduct_fk) REFERENCES Product(ProductID) ON DELETE CASCADE  ON UPDATE CASCADE ,FOREIGN KEY(InvoiceItem_fk) REFERENCES Invoice(InvoiceID) ON DELETE CASCADE ON UPDATE CASCADE )")
             
 
 
