@@ -1,9 +1,14 @@
 from DbConnect import DBConnect
 from InvoiceObj import Client,Product,Invoice,InvoiceItem
 from datetime import date
+from InvoiceReport import InvoiceReport
 
 
 dbconnect=DBConnect()
+
+# report=InvoiceReport("alaeddine")
+# items=[("item1",200.00,5,100.00),("item2",250.00,3,750.00),("item1",300.00,6,1800.00)]
+# report.add_items(items)
 
 '''client1 = Client("Alaeddine","0664661955","contact@telliala.info","bp 198 rouissat ouargla")
 client2 = Client("Bahaeddine","0664859632","baha@gmail.com","bp 198 rouissat")
@@ -60,15 +65,16 @@ dbconnect.add_item(invoice01_item04)'''
 #print(invoice02_item03.id)
 #dbconnect.remove_invoice(1)
 #dbconnect.remove_product(5)
-# invoice_info=dbconnect.get_invoice_info(1)
-# print(invoice_info)
+invoice_info=dbconnect.get_invoice_info(1)
+print(invoice_info[0][0])
+#total=dbconnect.total(invoice_info)
 # print('--------------------')
-# invoice_items=dbconnect.get_invoice_items(1)
+# invoice_items=dbconnect.get_invoice_items(2)
 
 # print('--------------------')
 # dbconnect.total(invoice_items)
-client_invoices=dbconnect.get_client_invoices(1)
-print(client_invoices)
+# client_invoices=dbconnect.get_client_invoices(1)
+#print(client_invoices)
 
 
 

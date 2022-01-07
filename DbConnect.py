@@ -132,8 +132,7 @@ class DBConnect :
             cursor=connection.cursor()
             cursor.execute(""" SELECT * from Invoice where InvoiceID = ? """,(id,))
             invoice=cursor.fetchall()
-            cursor.close()
-            self.db.close() 
+            
             return invoice
             
     def update_invoice(self,invoiceStatus,id):
@@ -208,13 +207,14 @@ class DBConnect :
                  cursor=connection.cursor()
             
             # Query for INNER JOIN
-                 sql = """SELECT Product.ProductName,Product.ProductPrice, InvoiceItem.InvoiceItemQuantity
-            FROM   Invoice ,InvoiceItem
-            LEFT JOIN Product on Product.ProductID = InvoiceItem.InvoiceItemProduct_fk
-            WHERE InvoiceID = ? """ 
+                 sql = """SELECT Product.ProductName,Product.ProductPrice, InvoiceItem.InvoiceItemQuantity , InvoiceItem.InvoiceItemQuantity * Product.ProductPrice 
+                            FROM   InvoiceItem
+                            LEFT JOIN Product on Product.ProductID = InvoiceItem.InvoiceItemProduct_fk
+                            LEFT JOIN Invoice on Invoice.InvoiceID = InvoiceItem.InvoiceItem_fk
+                            WHERE InvoiceID = ? """ 
                  cursor.execute(sql,(id,))
-                 invoice= cursor.fetchall()
-                 return invoice
+                 items= cursor.fetchall()
+                 return items
         
         except TypeError :
             print('connection err',TypeError )
@@ -225,7 +225,7 @@ class DBConnect :
                  cursor=connection.cursor()
             
             # Query for INNER JOIN
-                 sql = """SELECT Invoice.InvoiceCode,Invoice.InvoiceStatus, Client.ClientName,Client.ClientEmail,Client.ClientPhone,ClientAddress
+                 sql = """SELECT Invoice.InvoiceCode,Invoice.InvoiceStatus,InvoiceCreated_At, Client.ClientName,Client.ClientEmail,Client.ClientPhone,ClientAddress
                         FROM  invoice
                         LEFT JOIN Client on Client.ClientID = Invoice.InvoiceClient_fk
                         WHERE Invoice.InvoiceID = ? """ 
@@ -247,14 +247,16 @@ class DBConnect :
             cursor.close()
             self.db.close()
             return product_name
+
     def total(self,invoice_items):
         total=0.0
         
         for item in invoice_items:
-            price=float(item[1])*(item[2])
-            print(item[0],'the price of unit : ',item[1],'the number of items : ',item[2]," the price", price)
-            total+=price
-        print(total)
+            
+            total+=float(item[3])
+        total_tva=total*0.17
+        full_total=total+total_tva
+        return total,total_tva,full_total
 
             
     
