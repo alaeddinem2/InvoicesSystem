@@ -52,14 +52,7 @@ class DBConnect :
             cursor=connection.cursor()
             cursor.execute(""" SELECT * from Client """)
             clients=cursor.fetchall()
-            for row in clients:
-                print("Id: ", row[0])
-                print("Name: ", row[1])
-                print("phone: ", row[2])
-                print("Email: ", row[3])
-                print("address: ", row[4])
-                print("joinDate: ", row[5])
-                print("\n")
+            return clients
     
     
     #product operations
