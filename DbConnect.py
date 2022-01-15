@@ -1,7 +1,7 @@
 
 from datetime import date
 import sqlite3
-from sqlite3.dbapi2 import Date
+from sqlite3.dbapi2 import Date, Error
 
 
 class DBConnect :
@@ -9,15 +9,19 @@ class DBConnect :
     
     #Client operations
     def add_client(self,client):
-    
+  
         with sqlite3.connect("invoicesDB.db") as connection:
             cursor=connection.cursor()
             cursor.execute("insert into  Client (ClientName, ClientPhone, ClientEmail, ClientAddress, ClientJoin) values(?,?,?,?,?)",
-                        (client.name,client.phone,client.email,client.address,client.joinDate))            
+                            (client.name,client.phone,client.email,client.address,client.joinDate))            
             connection.commit()
             cursor.execute('SELECT max(ClientID) FROM Client')
             client.id = cursor.fetchone()[0]
-            print(client.name," was added !")
+            result= str(client.name) + " was added to the database !"
+            return result
+        
+            
+        
             
                     
     def get_client(self,id):
@@ -35,6 +39,8 @@ class DBConnect :
             cursor.execute("""Update Client set ClientName = ?,ClientPhone=?, ClientEmail = ?,ClientAddress=? WHERE ClientID = ?""",
                             (client.name,client.phone,client.email,client.address,id))
             connection.commit()
+            result = str(client.name)+" was updated"
+            return result
              
          
 
@@ -44,7 +50,7 @@ class DBConnect :
             cursor.execute("PRAGMA foreign_keys = ON")
             cursor.execute("""DELETE FROM Client WHERE ClientID = ?""",(id,))
             connection.commit() 
-            print('client was deleted')
+            return 'client was deleted'
          
     
     def get_all_clients(self):

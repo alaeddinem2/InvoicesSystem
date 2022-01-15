@@ -2,14 +2,21 @@ from DbConnect import DBConnect
 from InvoiceObj import Client,Product,Invoice,InvoiceItem
 from datetime import date
 from InvoiceReport import InvoiceReport
+import re
 
 
-dbconnect=DBConnect()
-clients =dbconnect.get_all_clients()
-for rows,user in enumerate(clients):
-    #print(rows)
-    for col,info in enumerate(user[1:]):
-        print(col,info)
+
+def check_email(email):
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        if(re.fullmatch(regex, email)):
+            return True
+ 
+        else:
+            return False
+
+email= "ala@f.com"
+
+print(check_email(email))
         
 # item10=InvoiceItem(1,1,20)
 # dbconnect.add_item(item10)
