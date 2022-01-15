@@ -24,12 +24,15 @@ class guiOperations(DBConnect,Client) :
 
 
     def select_client(self):
-
-        name = self.tableWidget.item(self.tableWidget.currentRow(),0).text()
-                    
-        phone = self.tableWidget.item(self.tableWidget.currentRow(),1).text()
-        email = self.tableWidget.item(self.tableWidget.currentRow(),2).text()
-        address = self.tableWidget.item(self.tableWidget.currentRow(),3).text()
+        for i in range(4):
+            thing = self.tableWidget.item(i,0)
+        if thing is not None :
+                name = self.tableWidget.item(self.tableWidget.currentRow(),0).text()            
+                phone = self.tableWidget.item(self.tableWidget.currentRow(),1).text()
+                email = self.tableWidget.item(self.tableWidget.currentRow(),2).text()
+                address = self.tableWidget.item(self.tableWidget.currentRow(),3).text()
+        else :
+                email = name = phone = address = ''
                     
         
         return name,phone,email,address 
@@ -99,6 +102,7 @@ class guiOperations(DBConnect,Client) :
         phone=self.clientPhone.text()
         email= self.clientEmail.text()
         address=self.clientAddress.text()
+        
         data = self.select_client()
         id = self.get_id(data[2])
 
@@ -126,7 +130,7 @@ class guiOperations(DBConnect,Client) :
             id = self.get_id(data[2])
             self.dbconnect.remove_client(id)
             print(id)
-            #self.get_clients()
+            self.get_clients()
         except:
             QMessageBox.information(self,"info","please select an user !")
         
@@ -135,10 +139,14 @@ class guiOperations(DBConnect,Client) :
 
 
     def get_clients(self):
-        
-        while self.tableWidget.rowCount()  > 0 :
 
+        while self.tableWidget.rowCount()  > 0:
+        
             self.tableWidget.removeRow(0)
+        
+        
+
+            
         
         self.clients=self.dbconnect.get_all_clients()
         for rows,client in enumerate(self.clients):
@@ -146,3 +154,6 @@ class guiOperations(DBConnect,Client) :
                 
             for col,data in enumerate(client[1:]):
                 self.tableWidget.setItem(rows,col,QTableWidgetItem(str(data)))
+
+
+#self.tableWidget.rowCount()  > 0
