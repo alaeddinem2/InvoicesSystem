@@ -9,13 +9,13 @@ from PyQt5.uic import loadUiType
 import sys
 
 from PyQt5.uic.properties import QtWidgets
-from gui_operations import guiOperations
+from gui_operations import clinetOperations
 
 
 
 ui,_ = loadUiType('main.ui')
 
-class Main(QMainWindow ,guiOperations, ui):
+class Main(QMainWindow ,clinetOperations, ui):
     def __init__(self , parent=None):
         super(Main, self).__init__(parent)
         QMainWindow.__init__(self)
@@ -34,7 +34,8 @@ class Main(QMainWindow ,guiOperations, ui):
         self.load.clicked.connect(self.get_clients)
         self.removeClient.clicked.connect(self.del_client)
         self.upClient.clicked.connect(self.load_client_data)
-        self.tableWidget.itemSelectionChanged.connect(self.select_client)
+        #self.tableWidget.itemSelectionChanged.connect(self.select_client)
+        self.cancelButt.clicked.connect(self.cancel)
         
         
         
