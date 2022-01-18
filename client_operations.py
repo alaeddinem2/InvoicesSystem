@@ -96,8 +96,10 @@ class clinetOperations(DBConnect,Client) :
             self.get_clients()       
 
 
-    '''update the client information'''
+    
     def updateClient(self):
+        '''update the client information'''
+
         name=self.clientName.text()
         phone=self.clientPhone.text()
         email= self.clientEmail.text()
@@ -115,6 +117,7 @@ class clinetOperations(DBConnect,Client) :
         
 
     def send_data(self):
+        '''send database request to add or update Client  '''
         
         if self.check == True :
             self.updateClient()
@@ -126,6 +129,8 @@ class clinetOperations(DBConnect,Client) :
 
 
     def del_client(self):
+        '''remove Client from databse'''
+
         if self.warning_message("Delete Client","are you sure that you want to delete client ?!") is True:
             try: 
                 
@@ -143,6 +148,8 @@ class clinetOperations(DBConnect,Client) :
 
 
     def get_clients(self):
+        '''get all clients'''
+
         self.clear_line_text_client()
 
         while self.tableWidget.rowCount()  > 0:
@@ -157,6 +164,8 @@ class clinetOperations(DBConnect,Client) :
                 self.tableWidget.setItem(rows,col,QTableWidgetItem(str(data)))
     
     def clear_line_text_client(self):
+        '''clear liens text'''
+
         self.clientName.clear()
         self.clientPhone.clear()
         self.clientEmail.clear()
@@ -165,16 +174,17 @@ class clinetOperations(DBConnect,Client) :
     def cancel(self):
         self.clear_line_text_client()
 
+
     def warning_message(self,title,message)-> bool :
+        ''' the warning message'''
+
         warning = QMessageBox.warning(self , title , message , QMessageBox.Yes | QMessageBox.No)
         if warning == QMessageBox.Yes :
             return True
         else :
             return False
     
-    def set_tabwidget_tozero(self):
-        for i in range(4):
-            self.tableWidget.item(self.tableWidget.currentRow(),i)
+    
         
 
 #self.tableWidget.rowCount()  > 0
