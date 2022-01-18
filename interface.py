@@ -9,7 +9,7 @@ from PyQt5.uic import loadUiType
 import sys
 
 from PyQt5.uic.properties import QtWidgets
-from gui_operations import clinetOperations
+from client_operations import clinetOperations
 
 
 
