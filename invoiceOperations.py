@@ -70,7 +70,7 @@ class incoiveOperations(productOPerations,clinetOperations,Invoice,InvoiceItem):
             invoice = Invoice(code,client_id,status)
             msg = self.dbconnect.add_Invoice(invoice)
             QMessageBox.information(self,"secces",msg[0])
-            self.invoice_textBrowser.setText(str(code))
+            self.code = self.invoice_textBrowser.setText(str(code))
             self.invoice_id =msg[1]
             self.set_invoive_compobox()
             self.display_invoice_info(self.invoice_id)
@@ -95,6 +95,8 @@ class incoiveOperations(productOPerations,clinetOperations,Invoice,InvoiceItem):
         self.clientLabel.setText(invoice_info[0][3])
         self.phoneLabel.setText(invoice_info[0][5])
         self.addressLabel.setText(invoice_info[0][6])
+        
+
     
 
     def set_invoive_compobox(self):
@@ -106,6 +108,8 @@ class incoiveOperations(productOPerations,clinetOperations,Invoice,InvoiceItem):
             invoice_code.append(invoice[2])
 
         self.invoice_display_combobox.addItems(invoice_code)
+        
+        self.invoice_display_combobox.setCurrentText(invoice_code[-1])
         
     def get_invoice_id(self,code):
         for invoice in self.invoices :
