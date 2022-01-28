@@ -4,15 +4,16 @@ class Invoice:
     id = None
     create = date.today()
     update = None
-    status = False
-    def __init__(self,code,client_id):
+     
+    def __init__(self,code,client_id,status):
         #invoice attr
         self.id=Invoice.id
         self.code = code
         self.client_id = client_id
-        self.status = Invoice.status
+        self.status = status
         self.create = Invoice.create
         self.update = Invoice.update
+        
 
         #create Invoice table in database
         with sqlite3.connect("invoicesDB.db") as connection:

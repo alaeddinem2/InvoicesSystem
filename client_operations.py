@@ -1,7 +1,3 @@
-
-from os import name
-from sqlite3.dbapi2 import Error
-from tabnanny import check
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -25,10 +21,10 @@ class clinetOperations(DBConnect,Client) :
     def select_client(self):
         ''' get data from table when we want to udpate or delete a client'''
 
-        name = self.tableWidget.item(self.tableWidget.currentRow(),0).text()            
-        phone = self.tableWidget.item(self.tableWidget.currentRow(),1).text()
-        email = self.tableWidget.item(self.tableWidget.currentRow(),2).text()
-        address = self.tableWidget.item(self.tableWidget.currentRow(),3).text()
+        name = self.clientTable.item(self.clientTable.currentRow(),0).text()            
+        phone = self.clientTable.item(self.clientTable.currentRow(),1).text()
+        email = self.clientTable.item(self.clientTable.currentRow(),2).text()
+        address = self.clientTable.item(self.clientTable.currentRow(),3).text()
         return name,phone,email,address
     
 
@@ -51,7 +47,7 @@ class clinetOperations(DBConnect,Client) :
     
 
     
-    def get_id(self,email)-> int :
+    def get_client_id(self,email)-> int :
         ''' returned the  client id by passing email address '''
 
         self.clients
@@ -116,7 +112,7 @@ class clinetOperations(DBConnect,Client) :
         print(data)
         
 
-    def send_data(self):
+    def send_client_data(self):
         '''send database request to add or update Client  '''
         
         if self.check == True :
@@ -131,38 +127,32 @@ class clinetOperations(DBConnect,Client) :
     def del_client(self):
         '''remove Client from databse'''
 
-        if self.warning_message("Delete Client","are you sure that you want to delete client ?!") is True:
-            try: 
-                
+        if self.warning_message("Delete Client","are you sure that you want to delete client ?!") is True :
+            try:    
                 data_del = self.select_client()    
-                id = self.get_id(data_del[2])
+                id = self.get_client_id(data_del[2])
                 self.dbconnect.remove_client(id)
-                print(id)
                 self.get_clients()
             except:
                     QMessageBox.information(self,"info","please selectuser !")
-        
-        
-        
-        
 
 
     def get_clients(self):
         '''get all clients'''
 
-        self.clear_line_text_client()
-
-        while self.tableWidget.rowCount()  > 0:
+        while self.clientTable.rowCount()  > 0:
         
-            self.tableWidget.removeRow(0)        
+            self.clientTable.removeRow(0)        
         
         self.clients=self.dbconnect.get_all_clients()
         for rows,client in enumerate(self.clients):
-            self.tableWidget.insertRow(rows)
+            self.clientTable.insertRow(rows)
                 
             for col,data in enumerate(client[1:]):
-                self.tableWidget.setItem(rows,col,QTableWidgetItem(str(data)))
+                self.clientTable.setItem(rows,col,QTableWidgetItem(str(data)))
+        
     
+
     def clear_line_text_client(self):
         '''clear liens text'''
 

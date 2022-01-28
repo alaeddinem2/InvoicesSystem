@@ -1,7 +1,9 @@
 
 from datetime import date
+from operator import rshift
 import sqlite3
 from sqlite3.dbapi2 import Date, Error
+from unittest import result
 
 
 class DBConnect :
@@ -71,6 +73,9 @@ class DBConnect :
             connection.commit()
             cursor.execute('SELECT max(ProductID) FROM Product')
             product.id = cursor.fetchone()[0]
+
+            result= str(product.name) + " was added to the database !"
+            return result
         
 
     def get_product(self,id):
@@ -89,30 +94,28 @@ class DBConnect :
             cursor.execute("""Update Product set ProductName = ?, ProductPrice=?,ProductUpdated_At=? WHERE ProductID = ?""",
                             (product.name,product.price,date.today(),id))
             connection.commit()
+            result = str(product.name)+"was update"
+            return result
              
         
 
     def remove_product(self,id):
         with sqlite3.connect("invoicesDB.db") as connection:
             cursor=connection.cursor()
-            self.db.execute("PRAGMA foreign_keys = ON")
+            cursor.execute("PRAGMA foreign_keys = ON")
             cursor.execute("""DELETE FROM Product WHERE ProductID = ?""",(id,))
             connection.commit()
-            print("product was deleted !")
+            result= "product was deleted !"
+            return result
         
 
     def get_all_products(self):
         with sqlite3.connect("invoicesDB.db") as connection:
             cursor=connection.cursor()
             cursor.execute(""" SELECT * from Product """)
-            clients=cursor.fetchall()
-            for row in clients:
-                print("Id: ", row[0])
-                print("Name: ", row[1])
-                print("price: ", row[2])
-                print("create: ", row[3])
-                print("update: ", row[4])
-                print("\n")
+            products=cursor.fetchall()
+            return products
+            
              
 
     #Invoice operations
@@ -120,11 +123,13 @@ class DBConnect :
     def add_Invoice(self,invoice):
         with sqlite3.connect("invoicesDB.db") as connection:
             cursor=connection.cursor()
-            self.db.execute("insert into  Invoice (InvoiceClient_fk, InvoiceCode, InvoiceStatus,InvoiceCreated_At,InvoiceUpdated_At) values(?,?,?,?,?)",
+            cursor.execute("insert into  Invoice (InvoiceClient_fk, InvoiceCode, InvoiceStatus,InvoiceCreated_At,InvoiceUpdated_At) values(?,?,?,?,?)",
                         (invoice.client_id,invoice.code,invoice.status,invoice.create,None))
             connection.commit()
             cursor.execute('SELECT max(InvoiceID) FROM Invoice')
             invoice.id = cursor.fetchone()[0]
+            result = "the invoice was added"
+            return result,invoice.id
             
 
     def get_invoice(self,id):
@@ -138,7 +143,7 @@ class DBConnect :
     def update_invoice(self,invoiceStatus,id):
         with sqlite3.connect("invoicesDB.db") as connection:
             cursor=connection.cursor()
-            connection.execute("""Update Invoice set InvoiceStatus = ?,InvoiceUpdated_At WHERE InvoiceID = ?""",
+            cursor.execute("""Update Invoice set InvoiceStatus = ?,InvoiceUpdated_At WHERE InvoiceID = ?""",
                             (invoiceStatus,Date.today(),id))
             connection.commit()
              
@@ -157,7 +162,15 @@ class DBConnect :
 
         with sqlite3.connect("invoicesDB.db") as connection:
             cursor=connection.cursor()
-            cursor.execute(""" SELECT * from Invoice where InvoiceClient_fk=? """,(client_id,))
+            cursor.execute(""" SELECT * from Invoice where InvoiceClient_fk = ? """,(client_id,))
+            invoices=cursor.fetchall()
+            return invoices
+
+    def get_all_invoices(self):
+
+        with sqlite3.connect("invoicesDB.db") as connection:
+            cursor=connection.cursor()
+            cursor.execute(""" SELECT * from Invoice """)
             invoices=cursor.fetchall()
             return invoices
                 
@@ -172,6 +185,7 @@ class DBConnect :
             connection.commit()
             cursor.execute('SELECT max(InvoiceItemID) FROM InvoiceItem')
             invoiceItem.id = cursor.fetchone()[0]
+            return "the item has added"
             
 
     def get_item(self,invoice_id):
@@ -184,13 +198,15 @@ class DBConnect :
                 print("quantity :", item[3])
             
 
-    def update_item(self,itemQuantity,product_id,invoice_id):
+    def update_item(self,itemQuantity,item_id):
         with sqlite3.connect("invoicesDB.db") as connection:
             cursor=connection.cursor()
             cursor.execute("PRAGMA foreign_keys = ON")
-            cursor.execute("""Update InvoiceItem set InvoiceItemQuantity=? WHERE InvoiceItem_fk = ? and InvoiceItemProduct_fk =?""",
-                            (itemQuantity,invoice_id,product_id))
+            cursor.execute("""Update InvoiceItem set InvoiceItemQuantity=? WHERE InvoiceItemID =?""",
+                            (itemQuantity,item_id))
             connection.commit()
+
+            return "the item was update !"
              
         
 
@@ -208,7 +224,7 @@ class DBConnect :
                  cursor=connection.cursor()
             
             # Query for INNER JOIN
-                 sql = """SELECT Product.ProductName,Product.ProductPrice, InvoiceItem.InvoiceItemQuantity , InvoiceItem.InvoiceItemQuantity * Product.ProductPrice 
+                 sql = """SELECT InvoiceItemID,Product.ProductName,Product.ProductPrice, InvoiceItem.InvoiceItemQuantity , InvoiceItem.InvoiceItemQuantity * Product.ProductPrice 
                             FROM   InvoiceItem
                             LEFT JOIN Product on Product.ProductID = InvoiceItem.InvoiceItemProduct_fk
                             LEFT JOIN Invoice on Invoice.InvoiceID = InvoiceItem.InvoiceItem_fk
@@ -254,8 +270,8 @@ class DBConnect :
         
         for item in invoice_items:
             
-            total+=float(item[3])
-        total_tva=total*0.17
+            total+=float(item[4])
+        total_tva=total*0.19
         full_total=total+total_tva
         return total,total_tva,full_total
 
