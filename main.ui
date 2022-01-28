@@ -867,6 +867,12 @@ QScrollBar::right-arrow:horizontal {
          <layout class="QHBoxLayout" name="horizontalLayout_10">
           <item>
            <widget class="QLabel" name="label_11">
+            <property name="maximumSize">
+             <size>
+              <width>60</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <pointsize>10</pointsize>
@@ -883,7 +889,7 @@ QScrollBar::right-arrow:horizontal {
            <widget class="QLCDNumber" name="subTotal">
             <property name="maximumSize">
              <size>
-              <width>115</width>
+              <width>137</width>
               <height>52</height>
              </size>
             </property>
@@ -894,7 +900,7 @@ QScrollBar::right-arrow:horizontal {
              </font>
             </property>
             <property name="digitCount">
-             <number>6</number>
+             <number>8</number>
             </property>
             <property name="value" stdset="0">
              <double>0.000000000000000</double>
@@ -915,6 +921,12 @@ QScrollBar::right-arrow:horizontal {
          <layout class="QHBoxLayout" name="horizontalLayout_12">
           <item>
            <widget class="QLabel" name="label_16">
+            <property name="maximumSize">
+             <size>
+              <width>45</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <pointsize>10</pointsize>
@@ -931,9 +943,12 @@ QScrollBar::right-arrow:horizontal {
            <widget class="QLCDNumber" name="TAV">
             <property name="maximumSize">
              <size>
-              <width>115</width>
+              <width>150</width>
               <height>52</height>
              </size>
+            </property>
+            <property name="digitCount">
+             <number>8</number>
             </property>
            </widget>
           </item>
@@ -951,6 +966,12 @@ QScrollBar::right-arrow:horizontal {
          <layout class="QHBoxLayout" name="horizontalLayout_13">
           <item>
            <widget class="QLabel" name="label_17">
+            <property name="maximumSize">
+             <size>
+              <width>49</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <pointsize>10</pointsize>
@@ -967,9 +988,12 @@ QScrollBar::right-arrow:horizontal {
            <widget class="QLCDNumber" name="Total">
             <property name="maximumSize">
              <size>
-              <width>115</width>
+              <width>150</width>
               <height>52</height>
              </size>
+            </property>
+            <property name="digitCount">
+             <number>8</number>
             </property>
            </widget>
           </item>
