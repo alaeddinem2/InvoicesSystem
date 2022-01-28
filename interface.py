@@ -29,7 +29,7 @@ class Main(QMainWindow ,incoiveOperations, ui):
         self.set_product_combobox()
         self.invoice_buttons()
         self.set_invoive_compobox()
-        self.display_items()
+        #self.display_items()
         self.set_product_combobox()
         self.set_client_combobox()
         

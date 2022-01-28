@@ -140,6 +140,7 @@ class incoiveOperations(productOPerations,clinetOperations,Invoice,InvoiceItem):
         self.invoice_items = self.dbconnect.get_invoice_items(invoice_id)
         self.invoice_textBrowser.setText(str(self.invoice_display_combobox.currentText()))
         self.display_invoice_info(invoice_id)
+        self.display_total()
         print(self.invoice_items)
 
         while self.invoiceItemsTable.rowCount() > 0 :

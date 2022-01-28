@@ -883,8 +883,8 @@ QScrollBar::right-arrow:horizontal {
            <widget class="QLCDNumber" name="subTotal">
             <property name="maximumSize">
              <size>
-              <width>96</width>
-              <height>53</height>
+              <width>115</width>
+              <height>52</height>
              </size>
             </property>
             <property name="font">
@@ -931,7 +931,7 @@ QScrollBar::right-arrow:horizontal {
            <widget class="QLCDNumber" name="TAV">
             <property name="maximumSize">
              <size>
-              <width>96</width>
+              <width>115</width>
               <height>52</height>
              </size>
             </property>
@@ -967,7 +967,7 @@ QScrollBar::right-arrow:horizontal {
            <widget class="QLCDNumber" name="Total">
             <property name="maximumSize">
              <size>
-              <width>96</width>
+              <width>115</width>
               <height>52</height>
              </size>
             </property>
