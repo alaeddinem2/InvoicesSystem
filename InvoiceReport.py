@@ -60,7 +60,7 @@ class InvoiceReport:
         #c.roundRect()
         self.c.rect(1*cm,9*cm,19*cm,13*cm,stroke=1,fill=0)
         self.c.line(1*cm,10*cm,20*cm,10*cm)
-        self.c.drawCentredString(1.75*cm,9.6*cm,"SR No.")
+        self.c.drawCentredString(1.75*cm,9.6*cm," No.")
         self.c.drawCentredString(7*cm,9.6*cm,"GOODS DESCRIPTION")
         self.c.drawCentredString(14*cm,9.6*cm,"PRICE")
         self.c.drawCentredString(16*cm,9.6*cm,"QTY")
@@ -89,12 +89,14 @@ class InvoiceReport:
         item_number= 1
         for item in items:
             self.c.drawCentredString(1.75*cm,xi*cm,"0"+str(item_number))
-            self.c.drawCentredString(4*cm,xi*cm,str(item[0]))
-            self.c.drawCentredString(14*cm,xi*cm,str(item[1]))
-            self.c.drawCentredString(16*cm,xi*cm,str(item[2]))
-            self.c.drawCentredString(18.5*cm,xi*cm,str(item[3]))
+            self.c.drawCentredString(4*cm,xi*cm,str(item[1]))
+            self.c.drawCentredString(14*cm,xi*cm,str(item[2]))
+            self.c.drawCentredString(16*cm,xi*cm,str(item[3]))
+            self.c.drawCentredString(18.5*cm,xi*cm,str(item[4]))
             xi+=1
             item_number+=1
+            
+            
         
         
         self.c.setFont("Times-Bold",10)

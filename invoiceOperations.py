@@ -5,7 +5,7 @@ from DbConnect import DBConnect
 from InvoiceObj import Invoice ,InvoiceItem
 from product_operations import productOPerations
 from client_operations import clinetOperations
-
+from InvoiceReport import InvoiceReport
 class incoiveOperations(productOPerations,clinetOperations,Invoice,InvoiceItem):
     invoices  = []
     invoice_id = 0
@@ -91,10 +91,10 @@ class incoiveOperations(productOPerations,clinetOperations,Invoice,InvoiceItem):
         
 
     def display_invoice_info(self,id):
-        invoice_info = self.dbconnect.get_invoice_info(id)
-        self.clientLabel.setText(invoice_info[0][3])
-        self.phoneLabel.setText(invoice_info[0][5])
-        self.addressLabel.setText(invoice_info[0][6])
+        self.invoice_info = self.dbconnect.get_invoice_info(id)
+        self.clientLabel.setText(self.invoice_info[0][3])
+        self.phoneLabel.setText(self.invoice_info[0][5])
+        self.addressLabel.setText(self.invoice_info[0][6])
         
 
     
@@ -167,9 +167,13 @@ class incoiveOperations(productOPerations,clinetOperations,Invoice,InvoiceItem):
         return
 
     def display_total(self):
-        total = self.dbconnect.total(self.invoice_items)
-        self.subTotal.display(total[0])
-        self.TAV.display(total[1])
-        self.Total.display(total[2])
+        self.total = self.dbconnect.total(self.invoice_items)
+        self.subTotal.display(self.total[0])
+        self.TAV.display(self.total[1])
+        self.Total.display(self.total[2])
+    
+    def generate_report(self):
+        file_name = self.clientLabel.text() + "-report"
+        report =InvoiceReport(file_name,self.invoice_items,self.invoice_info,self.total)
 
          

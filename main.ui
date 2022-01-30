@@ -1269,7 +1269,7 @@ QScrollBar::right-arrow:horizontal {
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_21">
          <item>
-          <widget class="QPushButton" name="pushButton_5">
+          <widget class="QPushButton" name="generateReport">
            <property name="maximumSize">
             <size>
              <width>120</width>

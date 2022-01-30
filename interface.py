@@ -63,6 +63,7 @@ class Main(QMainWindow ,incoiveOperations, ui):
         self.sendInvoiceData.clicked.connect(self.create_invoice)
         self.sendItemData.clicked.connect(self.create_item)
         self.loadItems.clicked.connect(self.display_items)
+        self.generateReport.clicked.connect(self.generate_report)
         
         
     # def enterEvent(self, event):
